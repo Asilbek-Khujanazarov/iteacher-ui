@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
-    "build": "node ./node_modules/@angular/cli/bin/ng build --configuration production",
+    "start": "ng serve",
+    "build": "ng build",
     "format": "prettier --write \"src/**/*.{ts,html,css,scss}\"",
-    "postinstall": "npm run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
