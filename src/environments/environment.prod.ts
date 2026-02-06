@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://iteacher.fly.dev/api',
+  apiUrl: 'https://artistic-adelina-iteacher-018c3c1e.koyeb.app/api',
 };
