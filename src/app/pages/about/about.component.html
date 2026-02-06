@@ -1,0 +1,523 @@
+<style>
+  /* Ensure horizontal scrolling for So‘nggi Yangiliklar and Mijozlar Fikrlari in mobile view */
+  @media (max-width: 767px) {
+    .news-container,
+    .reviews-container {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 1rem;
+      padding-bottom: 1rem;
+    }
+    .news-container > div,
+    .reviews-container > div {
+      flex: 0 0 80%;
+      scroll-snap-align: start;
+      min-width: 250px;
+    }
+    /* Hide scrollbar for cleaner look */
+    .news-container::-webkit-scrollbar,
+    .reviews-container::-webkit-scrollbar {
+      display: none;
+    }
+    .news-container,
+    .reviews-container {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Hide Statistikalar in mobile view */
+    .stats-section {
+      display: none;
+    }
+  }
+</style>
+<section class="w-full md:flex-1">
+  <div class="max-w-[1200px] mx-auto pt-16 px-4 flex flex-col items-center">
+    <div class="text-center mb-16 animate-fadeIn">
+      <h1
+        class="inline-block text-3xl md:text-6xl font-extrabold leading-none py-2 bg-gradient-to-r from-violet-500 to-violet-600 bg-clip-text text-transparent"
+      >
+        Bizning Asosiy Maqsadimiz
+      </h1>
+
+      <p
+        class="text- md:text-l text-l slate-600 dark:text-slate-300 max-w-[800px]"
+      >
+        ITeacher.uz – bu shaxsiy salohiyatni ochish va kelajak talablariga mos
+        ko‘nikmalarni shakllantirish uchun mo‘ljallangan yetakchi onlayn ta'lim
+        platformasi. Biz o‘z ustida ishlashni istagan har bir inson uchun
+        transformatsion yechimlarni taqdim etamiz.
+      </p>
+    </div>
+
+    <!-- <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div
+      class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-12 flex flex-col items-center text-center mb-16 w-full max-w-[1000px] animate-slideUp"
+    >
+      <div class="min-w-[100px] flex items-center justify-center"></div>
+      <div>
+        <h2
+          class="text-2xl md:text-3xl font-semibold mb-4 text-slate-800 dark:text-slate-100"
+        >
+          Bizning Asosiy Maqsadimiz
+        </h2>
+        <p class="text-slate-700 dark:text-slate-300 text-lg md:text-xl m-0">
+          Har bir foydalanuvchiga shaxsiy rivojlanish bo‘yicha eng yuqori
+          sifatli bilim va amaliy ko‘nikmalarni taqdim etish. Bizning vazifamiz
+          – o‘quvchilarni motivatsiya, samaradorlik va tanqidiy fikrlash kabi
+          hayotiy muhim ko‘nikmalar bilan qurollantirish.
+        </p>
+      </div>
+    </div> -->
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 w-full"
+    >
+      <div
+        class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl hover:shadow-violet-500/50 hover:scale-105 transition-all duration-300 p-6 flex flex-col items-start animate-fadeInUp delay-100"
+      >
+        <span class="mb-6 block">
+          <svg width="48" height="48" fill="none">
+            <circle cx="24" cy="24" r="20" stroke="#8b5cf6" stroke-width="3" />
+            <path
+              d="M14 24l8 8 12-12"
+              stroke="#8b5cf6"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <h3
+          class="text-xl font-semibold my-3 text-slate-800 dark:text-slate-100"
+        >
+          Soft Skills Kurslari
+        </h3>
+        <p class="text-slate-700 dark:text-slate-300 text-base m-0">
+          Muloqot, jamoada ishlash, liderlik va hissiy intellekt bo‘yicha amaliy
+          darslar.
+        </p>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl hover:shadow-violet-500/50 hover:scale-105 transition-all duration-300 p-6 flex flex-col items-start animate-fadeInUp delay-200"
+      >
+        <span class="mb-6 block">
+          <svg width="50" height="50" fill="none">
+            <circle cx="25" cy="25" r="22" stroke="#8b5cf6" stroke-width="3" />
+            <path
+              d="M25 10v15l10 5"
+              stroke="#8b5cf6"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <h3
+          class="text-xl font-semibold my-3 text-slate-800 dark:text-slate-100"
+        >
+          Vaqtni Boshqarish
+        </h3>
+        <p class="text-slate-700 dark:text-slate-300 text-base m-0">
+          Samaradorlikni oshirish, diqqatni jamlash va prokrastinatsiyani
+          yengish usullari.
+        </p>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl hover:shadow-violet-500/50 hover:scale-105 transition-all duration-300 p-6 flex flex-col items-start animate-fadeInUp delay-300"
+      >
+        <span class="mb-6 block">
+          <svg width="50" height="50" fill="none">
+            <path
+              d="M10 40 L25 10 L40 40 Z"
+              stroke="#8b5cf6"
+              stroke-width="3"
+              fill="none"
+            />
+            <path
+              d="M25 10v30"
+              stroke="#8b5cf6"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <circle cx="25" cy="40" r="5" fill="#8b5cf6" />
+          </svg>
+        </span>
+        <h3
+          class="text-xl font-semibold my-3 text-slate-800 dark:text-slate-100"
+        >
+          Maqsad Qo‘yish San'ati
+        </h3>
+        <p class="text-slate-700 dark:text-slate-300 text-base m-0">
+          SMART usuli, motivatsiya manbalari va barqaror o‘sishni ta’minlash
+          strategiyalari.
+        </p>
+      </div>
+      <div
+        class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl hover:shadow-violet-500/50 hover:scale-105 transition-all duration-300 p-6 flex flex-col items-start animate-fadeInUp delay-400"
+      >
+        <span class="mb-6 block">
+          <svg width="50" height="50" fill="none">
+            <path
+              d="M25 5L35 15L25 25L15 15L25 5Z"
+              stroke="#8b5cf6"
+              stroke-width="3"
+              fill="none"
+            />
+            <path
+              d="M25 25V45"
+              stroke="#8b5cf6"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <circle cx="25" cy="45" r="3" fill="#8b5cf6" />
+          </svg>
+        </span>
+        <h3
+          class="text-xl font-semibold my-3 text-slate-800 dark:text-slate-100"
+        >
+          Tanqidiy Fikrlash
+        </h3>
+        <p class="text-slate-700 dark:text-slate-300 text-base m-0">
+          Mantiq, muammoni hal qilish va innovatsion g‘oyalarni ishlab chiqish
+          bo‘yicha treninglar.
+        </p>
+      </div>
+    </div>
+
+    <!-- <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div
+      class="stats-section bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-10 mb-16 w-full max-w-[1200px] text-center animate-slideUp"
+    >
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100"
+      >
+        Raqamlarda Bizning O'zgarishimiz
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div
+          class="p-6 bg-violet-100 dark:bg-violet-900/50 rounded-xl hover:bg-violet-200 dark:hover:bg-violet-800 transition"
+        >
+          <span
+            class="text-4xl md:text-5xl font-bold text-violet-600 dark:text-fuchsia-400"
+            >8,000+</span
+          >
+          <p class="text-slate-700 dark:text-slate-200 mt-3">
+            Rivojlangan O‘quvchilar
+          </p>
+        </div>
+        <div
+          class="p-6 bg-violet-100 dark:bg-violet-900/50 rounded-xl hover:bg-violet-200 dark:hover:bg-violet-800 transition"
+        >
+          <span
+            class="text-4xl md:text-5xl font-bold text-violet-600 dark:text-fuchsia-400"
+            >25+</span
+          >
+          <p class="text-slate-700 dark:text-slate-200 mt-3">
+            Soft Skills Kurslari
+          </p>
+        </div>
+        <div
+          class="p-6 bg-violet-100 dark:bg-violet-900/50 rounded-xl hover:bg-violet-200 dark:hover:bg-violet-800 transition"
+        >
+          <span
+            class="text-4xl md:text-5xl font-bold text-violet-600 dark:text-fuchsia-400"
+            >92%</span
+          >
+          <p class="text-slate-700 dark:text-slate-200 mt-3">
+            Foydalanuvchi Qoniqishi
+          </p>
+        </div>
+        <div
+          class="p-6 bg-violet-100 dark:bg-violet-900/50 rounded-xl hover:bg-violet-200 dark:hover:bg-violet-800 transition"
+        >
+          <span
+            class="text-4xl md:text-5xl font-bold text-violet-600 dark:text-fuchsia-400"
+            >4+</span
+          >
+          <p class="text-slate-700 dark:text-slate-200 mt-3">
+            Yillik Ta'lim Tajribasi
+          </p>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        Mijozlar Fikrlari
+      </h2>
+      <div
+        class="reviews-container grid grid-cols-1 md:grid-cols-3 gap-6 w-full md:flex-1"
+      >
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <p class="text-slate-700 dark:text-slate-300 text-base italic mb-3">
+            "ITeacher menga vaqtni boshqarish va maqsadlarimga erishishda
+            mutlaqo yangi ko‘nikmalarni berdi. Ish samaradorligim 2x oshdi!"
+          </p>
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-yellow-400">★★★★★</span>
+            <p class="text-slate-800 dark:text-slate-100 font-semibold">
+              Aminaxon M.
+            </p>
+          </div>
+        </div>
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <p class="text-slate-700 dark:text-slate-300 text-base italic mb-3">
+            "Muloqot kurslari meni notiq qildi. Endi prezentatsiyalar
+            qiyinchilik tug‘dirmaydi. Rahmat!"
+          </p>
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-yellow-400">★★★★☆</span>
+            <p class="text-slate-800 dark:text-slate-100 font-semibold">
+              Javohir R.
+            </p>
+          </div>
+        </div>
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <p class="text-slate-700 dark:text-slate-300 text-base italic mb-3">
+            "Platforma juda qulay. Tanqidiy fikrlash bo‘yicha treninglar hayotim
+            sifatini tubdan o‘zgartirdi."
+          </p>
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-yellow-400">★★★★★</span>
+            <p class="text-slate-800 dark:text-slate-100 font-semibold">
+              Shohista A.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        Bizning Ekspert Jamoamiz
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Abduraxmon X.
+          </h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">
+            Asosiy Motivatsiya Treneri
+          </p>
+          <p class="text-slate-700 dark:text-slate-300 mt-2">
+            10 yillik tajriba bilan shaxsiy o‘sish va liderlik bo‘yicha
+            mutaxassis.
+          </p>
+        </div>
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Madina K.
+          </h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">
+            Samaradorlik Bo'yicha Mutaxassis
+          </p>
+          <p class="text-slate-700 dark:text-slate-300 mt-2">
+            Vaqtni boshqarish va hayotiy maqsadlarni belgilash bo‘yicha mentor.
+          </p>
+        </div>
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Asilbek Kh.
+          </h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">
+            Texnik Rivojlanish Direktori
+          </p>
+          <p class="text-slate-700 dark:text-slate-300 mt-2">
+            Platformaning barqarorligi va interaktivligini ta’minlaydi.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        So‘nggi Rivojlanish Maslahatlari
+      </h2>
+      <div class="news-container grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Prokrastinatsiyani Yengishning 5 Usuli
+          </h3>
+          <p class="text-slate-700 dark:text-slate-300 mt-2">
+            Kunning eng muhim ishlarini qanday qilib darhol boshlash kerak.
+          </p>
+          <a
+            href="/blog/procrastination-tips"
+            class="text-violet-600 dark:text-fuchsia-400 mt-4 inline-block"
+            >Batafsil →</a
+          >
+        </div>
+        <div class="p-6 bg-gray-50 dark:bg-slate-800 rounded-xl shadow-inner">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Liderlik Sirlari: Eng Muhim 3 Ko'nikma
+          </h3>
+          <p class="text-slate-700 dark:text-slate-300 mt-2">
+            Muvaffaqiyatli yetakchilarning umumiy xususiyatlari.
+          </p>
+          <a
+            href="/blog/leadership-secrets"
+            class="text-violet-600 dark:text-fuchsia-400 mt-4 inline-block"
+            >Batafsil →</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        Bizning Filiallarimiz
+      </h2>
+      <div
+        class="aspect-video bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden"
+      >
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.567!2d69.2401!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aef3!2z0KHQsNC60LjQu9C10YIg0L3QtdC70LDRgdC60Lgg0J7QsdC7!5e0!3m2!1suz!2suz!4v1623456789!5m2!1suz!2suz"
+          frameborder="0"
+          allowfullscreen
+          class="w-full h-full"
+        ></iframe>
+      </div>
+      <p class="text-slate-700 dark:text-slate-300 text-base mt-4 text-center">
+        Bizning filiallarimiz bo‘yicha ma’lumot oling va yaqinlaringizga tashrif
+        buyuring!
+      </p>
+    </div> -->
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        Tez-tez So‘raladigan Savollar
+      </h2>
+      <div class="space-y-4">
+        <details class="group bg-gray-50 dark:bg-slate-800 p-6 rounded-xl">
+          <summary
+            class="text-lg font-medium text-slate-800 dark:text-slate-100 cursor-pointer"
+          >
+            ITeacher.uz dagi kurslar nimaga qaratilgan?
+          </summary>
+          <p class="text-slate-700 dark:text-slate-300 mt-2 text-base">
+            Kurslar asosan shaxsiy samaradorlik, vaqtni boshqarish, muloqot
+            ko‘nikmalari va biznes etikasi kabi soft skillsni rivojlantirishga
+            qaratilgan.
+          </p>
+        </details>
+        <details class="group bg-gray-50 dark:bg-slate-800 p-6 rounded-xl">
+          <summary
+            class="text-lg font-medium text-slate-800 dark:text-slate-100 cursor-pointer"
+          >
+            Kurslarni o‘zlashtirish qanchalik tez sodir bo‘ladi?
+          </summary>
+          <p class="text-slate-700 dark:text-slate-300 mt-2 text-base">
+            Kurslar amaliy topshiriqlar bilan tuzilgan bo‘lib, natijalar bir
+            necha hafta ichida ko‘rinishni boshlaydi. Rivojlanish sur'ati
+            o‘quvchining shaxsiy intilishiga bog‘liq.
+          </p>
+        </details>
+      </div>
+    </div>
+
+    <!-- <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        Hamkorlarimiz
+      </h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <img
+          src="https://res.cloudinary.com/dz3q6hxqn/image/upload/v1758792010/mzone_eba5zk.jpg"
+          alt="Partner 1"
+          class="h-16 mx-auto opacity-70 hover:opacity-100 transition"
+        />
+        <img
+          src="https://res.cloudinary.com/dz3q6hxqn/image/upload/v1758791785/idppng_nxnqqa.png"
+          alt="Partner 2"
+          class="h-10 mx-auto opacity-70 hover:opacity-100 transition"
+        />
+        <img
+          src="https://res.cloudinary.com/dz3q6hxqn/image/upload/v1758791432/yoshlarishlarilogo_yjxaip.png"
+          alt="Partner 3"
+          class="h-20 mx-auto opacity-70 hover:opacity-100 transition"
+        />
+      </div>
+    </div> -->
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div class="w-full md:flex-1">
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 dark:text-slate-100 text-center"
+      >
+        Biz bilan Bog‘laning
+      </h2>
+      <form class="flex flex-col gap-6 max-w-[600px] mx-auto">
+        <input
+          type="text"
+          placeholder="Ismingiz"
+          class="p-4 rounded-xl bg-gray-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+        />
+        <input
+          type="email"
+          placeholder="Email manzilingiz"
+          class="p-4 rounded-xl bg-gray-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+        />
+        <textarea
+          placeholder="Xabaringiz"
+          rows="5"
+          class="p-4 rounded-xl bg-gray-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+        ></textarea>
+        <button
+          type="submit"
+          class="bg-violet-600 hover:bg-violet-700 dark:bg-fuchsia-500 dark:hover:bg-fuchsia-600 text-white rounded-xl px-8 py-3 text-lg font-semibold transition transform hover:scale-105"
+        >
+          Yuborish
+        </button>
+      </form>
+    </div>
+
+    <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+    <div
+      class="bg-gradient-to-r from-violet-100 to-white dark:from-violet-900/50 dark:to-slate-900 rounded-3xl shadow-2xl p-10 mt-16 w-full max-w-[1000px] text-center animate-slideUp"
+    >
+      <h2
+        class="text-2xl md:text-3xl font-semibold mb-6 text-slate-800 dark:text-slate-100"
+      >
+        O‘zgarish Sari Birinchi Qadamni Tashlang!
+      </h2>
+      <p
+        class="text-slate-700 dark:text-slate-300 text-lg md:text-xl mb-8 max-w-[600px] mx-auto"
+      >
+        Bizning kurslarimiz bilan shaxsiy samaradorligingizni oshiring va kasbiy
+        kelajagingizni o‘zingiz yarating.
+      </p>
+    </div>
+  </div>
+</section>

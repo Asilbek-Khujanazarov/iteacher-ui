@@ -1,0 +1,48 @@
+@use "tailwindcss/base";
+@use "tailwindcss/components";
+@use "tailwindcss/utilities";
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.observe-fadeInUp {
+  opacity: 0;
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+}
+
+.observe-fadeInUp.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-200 {
+  transition-delay: 0.2s;
+}
+
+.delay-400 {
+  transition-delay: 0.4s;
+}
+
+/* Carousel stil */
+#carousel {
+  height: 200px;
+}
+
+#carouselItems {
+  display: flex;
+  width: 100%;
+}
+
+.min-w-full {
+  width: 100%;
+}

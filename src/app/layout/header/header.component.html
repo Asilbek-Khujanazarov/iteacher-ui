@@ -1,0 +1,224 @@
+<header
+  class="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 py-2 relative"
+>
+  <div class="max-w-[1200px] mx-auto flex items-center justify-between px-4">
+    <div
+      class="flex items-center gap-2 text-xl md:text-2xl font-bold text-violet-600 dark:text-violet-400"
+    >
+      <!-- <i class="ri-car-line text-3xl"></i> -->
+      <!-- <img src="https://res.cloudinary.com/dte2uy2wc/image/upload/v1751796602/logo1_j2pwr1.png"
+      alt="iTeacher Logo" class="w-10 h-10"> -->
+
+      <span>iTeacher</span>
+    </div>
+    <!-- Desktop navigation + Dark/Light switch -->
+    <div class="flex items-center gap-2">
+      <nav class="hidden md:flex items-center gap-4">
+        @if (!isLoggedIn) {
+          <!-- <a routerLink="/"
+        class="text-black dark:text-white hover:text-violet-600 dark:hover:text-violet-400 transition">Bosh Menu</a> -->
+          <a
+            routerLink="/about"
+            class="text-black dark:text-white hover:text-violet-600 dark:hover:text-violet-400 transition"
+            >Biz haqimizda</a
+          >
+          <button
+            class="px-4 py-2 rounded text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition"
+            routerLink="/login"
+          >
+            Kirish
+          </button>
+          <button
+            class="px-3 py-1.5 rounded bg-violet-600 text-white hover:bg-violet-700 transition"
+            routerLink="/register"
+          >
+            Ro'yxatdan o'tish
+          </button>
+        }
+        @if (isLoggedIn) {
+          <div class="relative">
+            <button
+              class="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center text-white font-semibold"
+              (click)="toggleDropdown()"
+            >
+              {{ user?.firstName?.charAt(0) || "U" }}
+            </button>
+            @if (isDropdownOpen) {
+              <div
+                class="absolute right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-3 min-w-[260px] z-50"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-12 h-12 rounded-full bg-violet-600 flex items-center justify-center text-white font-semibold"
+                  >
+                    {{ user?.firstName?.charAt(0) || "U" }}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div
+                      class="font-semibold text-slate-800 dark:text-slate-100 truncate"
+                    >
+                      {{ user?.firstName }} {{ user?.lastName }}
+                    </div>
+                    <div class="text-xs text-slate-500">
+                      {{ user?.phoneNumber | phoneFormat }}
+                    </div>
+                  </div>
+                </div>
+                <div class="h-px bg-gray-200 dark:bg-slate-700 my-2"></div>
+                <a
+                  routerLink="/"
+                  class="flex items-center gap-2 px-4 py-2 text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition"
+                  (click)="closeDropdown()"
+                >
+                  <i class="ri-user-line"></i> Bosh Menu
+                </a>
+                <a
+                  routerLink="/my-profile"
+                  class="flex items-center gap-2 px-4 py-2 text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition"
+                  (click)="closeDropdown()"
+                >
+                  <i class="ri-user-line"></i> Profil ma'lumotlari
+                </a>
+                <button
+                  class="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900 transition w-full text-left"
+                  (click)="logout()"
+                >
+                  <i class="ri-logout-box-line"></i> Chiqish
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </nav>
+      <!-- Dark/Light mode switch -->
+      <button
+        (click)="toggleDarkMode()"
+        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition ml-2"
+      >
+        @if (!isDarkMode) {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-yellow-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.07l-.71.71M21 12h-1M4 12H3m16.66 6.66l-.71-.71M4.05 4.93l-.71-.71M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+        }
+        @if (isDarkMode) {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-slate-200"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+            />
+          </svg>
+        }
+      </button>
+      <!-- Mobile menu button -->
+      <button
+        class="md:hidden p-2 text-xl text-slate-700 dark:text-slate-200"
+        (click)="toggleMobileMenu()"
+      >
+        <i class="ri-menu-line"></i>
+      </button>
+    </div>
+    <!-- Mobile menu overlay -->
+    @if (isMobileMenuOpen) {
+      <div
+        class="fixed inset-0 bg-black/40 z-30"
+        (click)="closeMobileMenu()"
+      ></div>
+    }
+    <!-- Mobile menu -->
+    <div
+      class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-slate-900 shadow-lg z-40 transform transition-transform duration-200 ease-in-out"
+      [class.translate-x-0]="isMobileMenuOpen"
+      [class.translate-x-full]="!isMobileMenuOpen"
+    >
+      <div class="flex justify-end p-4">
+        <button
+          (click)="closeMobileMenu()"
+          class="text-2xl text-slate-700 dark:text-slate-200"
+        >
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-2 px-6">
+        @if (!isLoggedIn) {
+          <a
+            routerLink="/"
+            class="py-2 px-3 rounded text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition"
+            (click)="closeMobileMenu()"
+            >Bosh Menu</a
+          >
+          <a
+            routerLink="/about"
+            class="py-2 px-3 rounded text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition"
+            (click)="closeMobileMenu()"
+            >Biz haqimizda</a
+          >
+          <a
+            routerLink="/login"
+            class="py-2 px-3 rounded text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition"
+            (click)="closeMobileMenu()"
+            >Kirish</a
+          >
+          <a
+            routerLink="/register"
+            class="py-2 px-3 rounded bg-violet-600 text-white text-center hover:bg-violet-700 transition"
+            (click)="closeMobileMenu()"
+            >Ro'yxatdan o'tish</a
+          >
+        }
+        @if (isLoggedIn) {
+          <div
+            class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-md p-3 mb-2 flex flex-row items-center gap-2"
+          >
+            <div
+              class="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center text-white font-semibold"
+            >
+              {{ user?.firstName?.charAt(0) || "U" }}
+            </div>
+            <div class="flex flex-col text-left min-w-0">
+              <div
+                class="font-semibold text-sm text-black dark:text-white leading-tight truncate"
+              >
+                {{ user?.firstName }} {{ user?.lastName }}
+              </div>
+              <div class="text-xs text-slate-500 leading-tight">
+                +{{ user?.phoneNumber }}
+              </div>
+            </div>
+          </div>
+          <a
+            routerLink="/my-profile"
+            class="py-2 px-3 rounded text-black dark:text-white hover:bg-violet-50 dark:hover:bg-slate-800 transition flex items-center gap-2"
+            (click)="closeMobileMenu()"
+          >
+            <i class="ri-user-line"></i> Profil ma'lumotlari
+          </a>
+          <button
+            class="py-2 px-3 rounded text-red-600 hover:bg-red-50 dark:hover:bg-red-900 transition flex items-center gap-2"
+            (click)="logout(); closeMobileMenu()"
+          >
+            <i class="ri-logout-box-line"></i> Chiqish
+          </button>
+        }
+      </nav>
+    </div>
+  </div>
+</header>

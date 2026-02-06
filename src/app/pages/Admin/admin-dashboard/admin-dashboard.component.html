@@ -1,0 +1,158 @@
+<div
+  class="min-h-screen flex flex-col md:flex-row gap-4 p-4 bg-transparent text-gray-900 dark:text-white"
+>
+  <!-- Mobile Menu Toggle Button -->
+  <button
+    class="md:hidden fixed bottom-4 right-4 z-50 bg-blue-600 dark:bg-blue-500 text-white p-3 rounded-full shadow-lg focus:outline-none"
+    (click)="toggleSidebar()"
+  >
+    <i class="ri-menu-line text-2xl"></i>
+  </button>
+
+  <!-- Overlay for Mobile -->
+  <div
+    class="fixed inset-0 bg-black/50 md:hidden z-40"
+    [ngClass]="{
+      block: isSidebarOpen && !isDesktop,
+      hidden: !isSidebarOpen || isDesktop,
+    }"
+    (click)="toggleSidebar()"
+  ></div>
+
+  <!-- Sidebar -->
+  <aside
+    class="w-full md:w-64 bg-white dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-4 shadow-lg overflow-y-auto transition-transform duration-300 ease-in-out z-50"
+    [ngClass]="{
+      'fixed bottom-0 left-0 translate-y-full': !isSidebarOpen && !isDesktop,
+      'fixed bottom-0 left-0 translate-y-0': isSidebarOpen && !isDesktop,
+      'md:static': isDesktop,
+    }"
+    [style.max-height]="isDesktop ? '100vh' : '60vh'"
+    [style.display]="!isSidebarOpen && !isDesktop ? 'none' : 'block'"
+    [style.border-radius]="isDesktop ? '0.5rem' : '0.5rem 0.5rem 0 0'"
+  >
+    <!-- Close Button for Mobile -->
+    <div class="flex justify-between items-center md:hidden">
+      <button
+        class="text-gray-600 dark:text-gray-300 focus:outline-none"
+        (click)="toggleSidebar()"
+      >
+        <i class="ri-close-line text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Savol Qo'shish -->
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl font-semibold"
+      [ngClass]="{
+        'bg-blue-600 dark:bg-blue-700 text-white':
+          activeSection === 'create-question',
+        'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700':
+          activeSection !== 'create-question',
+      }"
+      href="#"
+      (click)="setActiveSection('create-question', $event)"
+    >
+      <i class="ri-lightbulb-line text-xl"></i>
+      <!-- Savol qo‘shish uchun mos icon -->
+      Savol Qo'shish
+    </a>
+
+    <!-- Savollarni Boshqarish -->
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl"
+      [ngClass]="{
+        'bg-blue-600 dark:bg-blue-700 text-white':
+          activeSection === 'manage-questions',
+        'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700':
+          activeSection !== 'manage-questions',
+      }"
+      href="#"
+      (click)="setActiveSection('manage-questions', $event)"
+    >
+      <i class="ri-file-list-3-line text-xl"></i>
+      <!-- Boshqarish uchun mos icon -->
+      Savollarni Boshqarish
+    </a>
+    <!--
+    <a class="flex items-center gap-3 px-3 py-3 rounded-xl"
+      [ngClass]="{'bg-blue-600 dark:bg-blue-700 text-white': activeSection === 'certificates', 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': activeSection !== 'certificates'}"
+      href="#" (click)="setActiveSection('certificates', $event)">
+      <i class="ri-award-line text-xl"></i>
+      Sertifikatlarim
+    </a>
+    <a class="flex items-center gap-3 px-3 py-3 rounded-xl"
+      [ngClass]="{'bg-blue-600 dark:bg-blue-700 text-white': activeSection === 'payment-history', 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': activeSection !== 'payment-history'}"
+      href="#" (click)="setActiveSection('payment-history', $event)">
+      <i class="ri-time-line text-xl"></i>
+      To‘lovlar tarixi
+    </a>
+    <a class="flex items-center gap-3 px-3 py-3 rounded-xl"
+      [ngClass]="{'bg-blue-600 dark:bg-blue-700 text-white': activeSection === 'devices', 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': activeSection !== 'devices'}"
+      href="#" (click)="setActiveSection('devices', $event)">
+      <i class="ri-computer-line text-xl"></i>
+      Qurilmalarim
+    </a> -->
+  </aside>
+
+  <!-- Main Content -->
+  <main class="w-full md:flex-1 z-10">
+    <div
+      class="w-full h-screen bg-white dark:bg-gray-800 rounded-xl p-4 overflow-y-auto shadow-lg relative flex items-center justify-center scrollbar-hide"
+    >
+      @if (activeSection === "create-question") {
+        <div class="w-full h-full">
+          <app-create-question></app-create-question>
+        </div>
+      }
+      @if (activeSection === "manage-questions") {
+        <div class="w-full h-full">
+          <app-management-question></app-management-question>
+        </div>
+      }
+      @if (activeSection === "certificates") {
+        <div
+          class="w-full h-full flex items-center justify-center text-gray-600 dark:text-gray-300"
+        >
+          Sertifikatlarim bo'limi
+        </div>
+      }
+      @if (activeSection === "payment-history") {
+        <div
+          class="w-full h-full flex items-center justify-center text-gray-600 dark:text-gray-300"
+        >
+          To‘lovlar tarixi bo'limi
+        </div>
+      }
+      @if (activeSection === "devices") {
+        <div
+          class="w-full h-full flex items-center justify-center text-gray-600 dark:text-gray-300"
+        >
+          Qurilmalarim bo'limi
+        </div>
+      }
+      @if (!activeSection) {
+        <div
+          class="w-full h-full flex items-center justify-center text-gray-600 dark:text-gray-300"
+        >
+          Iltimos, biror bo'limni tanlang.
+        </div>
+      }
+    </div>
+  </main>
+
+  <!-- Inline Style to Hide Main Scrollbar Thumb -->
+  <style>
+    main > div::-webkit-scrollbar-thumb {
+      display: none;
+      /* Hide the thumb on WebKit browsers (Chrome, Safari) */
+    }
+
+    main > div {
+      -ms-overflow-style: none;
+      /* Hide scrollbar in IE and Edge */
+      scrollbar-width: none;
+      /* Hide scrollbar in Firefox */
+    }
+  </style>
+</div>

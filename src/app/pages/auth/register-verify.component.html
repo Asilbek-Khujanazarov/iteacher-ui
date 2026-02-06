@@ -1,0 +1,52 @@
+<div
+  class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors py-8"
+>
+  <div
+    class="w-full max-w-xs sm:max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-4 sm:p-8 flex flex-col gap-4"
+  >
+    <h2
+      class="text-2xl font-bold text-center text-slate-800 dark:text-white mb-2"
+    >
+      Tasdiqlash Kodi
+    </h2>
+    <p class="text-center text-slate-500 dark:text-slate-300 mb-4">
+      +{{ phoneNumber }} raqamidagi Telegramga tasdiqlash kodi yuborildi
+    </p>
+    <form
+      [formGroup]="verifyForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col gap-4"
+    >
+      <input
+        formControlName="code"
+        maxlength="6"
+        type="text"
+        placeholder="------"
+        class="rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-center text-2xl tracking-widest text-slate-800 dark:text-white px-4 py-3 focus:outline-none"
+      />
+      <button
+        class="w-full py-3 rounded-lg bg-violet-600 text-white font-semibold hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600 transition"
+        [disabled]="verifyForm.invalid || loading"
+      >
+        Tasdiqlash
+      </button>
+    </form>
+    <div class="flex flex-col gap-2 mt-2">
+      <button
+        type="button"
+        class="text-violet-600 dark:text-violet-400 hover:underline text-sm"
+        (click)="resendCode()"
+        [disabled]="isResending"
+      >
+        {{
+          isResending ? "Qayta yuborish (" + countdown + ")" : "Qayta yuborish"
+        }}
+      </button>
+      <a
+        (click)="goBack()"
+        class="text-slate-600 dark:text-slate-300 hover:underline text-sm cursor-pointer"
+        >Orqaga qaytish</a
+      >
+    </div>
+  </div>
+</div>

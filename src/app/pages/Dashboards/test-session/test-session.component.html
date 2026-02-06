@@ -1,0 +1,419 @@
+<div
+  class="w-full md:flex-1 min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 transition-colors duration-300"
+>
+  <main class="w-full max-w-4xl mx-auto p-4 sm:p-6">
+    <h1
+      class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white text-center mb-8 drop-shadow-md"
+    >
+      Test
+    </h1>
+
+    <!-- Loading State -->
+    <div
+      *ngIf="loading"
+      class="bg-blue-500/10 backdrop-blur-md text-blue-600 dark:text-blue-300 text-sm p-3 rounded-xl text-center w-full shadow-lg animate-pulse"
+    >
+      Yuklanmoqda...
+    </div>
+
+    <!-- Error Message -->
+    <div
+      *ngIf="error"
+      class="bg-red-500/10 backdrop-blur-md text-red-600 dark:text-red-300 text-sm p-3 rounded-xl text-center w-full shadow-lg animate-shake"
+    >
+      {{ error }}
+    </div>
+
+    <!-- Start Test Button (Before Session Starts) -->
+    <div *ngIf="!session" class="flex justify-center mt-8">
+      <button
+        (click)="startTest()"
+        class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-base font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-3 transform hover:-translate-y-1"
+      >
+        <i class="ri-play-fill text-lg"></i>
+        Testni boshlash
+      </button>
+    </div>
+
+    <!-- Test Session -->
+    <div *ngIf="session && !result" class="flex flex-col gap-6">
+      <!-- Timer and Progress -->
+      <div
+        class="relative bg-white/30 dark:bg-slate-800/30 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg flex justify-center items-center"
+      >
+        <button
+          (click)="confirmFinishTest()"
+          class="absolute left-0 text-gray-900 dark:text-white text-4xl p-2 transition-all duration-300"
+        >
+          <i class="ri-arrow-left-line"></i>
+        </button>
+        <div
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
+        >
+          {{ currentQuestionIndex + 1 }} / {{ session.questions.length }}
+          <span class="text-blue-600 dark:text-blue-400">
+            | {{ timeRemaining | date: "mm:ss" }}</span
+          >
+        </div>
+      </div>
+      <!-- Progress Bar -->
+      <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5">
+        <div
+          class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full transition-all duration-500"
+          [style.width.%]="
+            ((currentQuestionIndex + 1) / session.questions.length) * 100
+          "
+        ></div>
+      </div>
+
+      <!-- Current Question -->
+      <div
+        *ngIf="currentQuestion"
+        class="w-full flex flex-col gap-6 animate-fade-in"
+      >
+        <!-- Question Text and Image -->
+        <div class="flex flex-col gap-4 items-center w-full">
+          <h2
+            *ngIf="currentQuestion.text"
+            class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white text-center"
+          >
+            {{ currentQuestion.text }}
+          </h2>
+          <div
+            *ngIf="currentQuestion.imageUrl"
+            class="relative w-full max-w-md"
+          >
+            <img
+              [src]="currentQuestion.imageUrl"
+              class="w-full h-40 sm:h-48 object-cover rounded-lg cursor-pointer border-2 border-white/50 dark:border-slate-700/50 hover:scale-105 transition-transform duration-300"
+              alt="Savol rasmi"
+              (click)="openImage(currentQuestion.imageUrl)"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- Answers -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+          <div
+            *ngFor="let answer of currentQuestion.answers; let i = index"
+            class="flex flex-col gap-3 text-sm text-gray-700 dark:text-gray-300 font-semibold items-start p-3 bg-white/20 dark:bg-slate-700/20 rounded-lg shadow-sm hover:shadow-md hover:bg-blue-100/50 dark:hover:bg-blue-900/50 transition-all duration-200 cursor-pointer"
+            (click)="onAnswerSelect(answer.id)"
+          >
+            <div class="flex items-center gap-3 w-full">
+              <span class="font-bold text-blue-600 dark:text-blue-400"
+                >{{ getLetter(i) }}.</span
+              >
+              <span *ngIf="answer.text">{{ answer.text }}</span>
+            </div>
+            <div
+              *ngIf="answer.imageUrl"
+              class="relative w-full max-w-[150px] sm:max-w-[200px]"
+            >
+              <img
+                [src]="answer.imageUrl"
+                class="w-full h-24 sm:h-28 object-cover rounded-lg cursor-pointer border-2 border-white/50 dark:border-slate-700/50 hover:scale-105 transition-transform duration-300"
+                alt="Javob rasmi"
+                (click)="openImage(answer.imageUrl)"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finish Confirmation Modal -->
+      <div
+        *ngIf="showFinishConfirm"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in"
+      >
+        <div
+          class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-6 rounded-xl shadow-lg max-w-md w-full mx-4"
+        >
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Testni yakunlashni xohlaysizmi?
+          </h3>
+          <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">
+            Testni yakunlasangiz, qolgan savollarga javob bera olmaysiz.
+          </p>
+          <div class="flex gap-4 justify-center">
+            <button
+              (click)="cancelFinishTest()"
+              class="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white text-sm px-5 py-2.5 rounded-lg transition-all duration-300 shadow-md"
+            >
+              Bekor qilish
+            </button>
+            <button
+              (click)="finishTest()"
+              class="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white text-sm px-5 py-2.5 rounded-lg transition-all duration-300 shadow-md"
+            >
+              Yakunlash
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Results -->
+    <div *ngIf="result" class="flex flex-col gap-6 animate-fade-in">
+      <div
+        class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg w-full"
+      >
+        <h2
+          class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white text-center mb-4 drop-shadow-md"
+        >
+          Test hisoboti
+        </h2>
+        <div
+          *ngIf="result.failureReason"
+          class="bg-red-500/20 backdrop-blur-md text-red-600 dark:text-red-300 text-sm p-3 rounded-lg text-center mb-4 shadow-sm animate-shake"
+        >
+          <i class="ri-error-warning-line mr-2"></i>{{ result.failureReason }}
+        </div>
+        <div
+          class="flex flex-col gap-3 text-sm text-gray-700 dark:text-gray-300"
+        >
+          <p><strong>Umumiy savollar:</strong> {{ result.totalQuestions }}</p>
+          <p><strong>To‘g‘ri javoblar:</strong> {{ result.correctAnswers }}</p>
+          <p>
+            <strong>Noto‘g‘ri javoblar:</strong> {{ result.wrongAnswerCount }}
+          </p>
+          <p>
+            <strong>Javob berilmagan savollar:</strong>
+            {{ result.unansweredQuestions.length }}
+          </p>
+          <p>
+            <strong>Foiz:</strong>
+            {{
+              ((result.correctAnswers / result.totalQuestions) * 100).toFixed(
+                2
+              )
+            }}%
+          </p>
+          <p>
+            <strong>Daraja:</strong>
+            <span
+              [ngClass]="{
+                'text-green-600 dark:text-green-400':
+                  result.grade === 'Excellent',
+                'text-blue-600 dark:text-blue-400': result.grade === 'Good',
+                'text-yellow-600 dark:text-yellow-400':
+                  result.grade === 'Average',
+                'text-red-600 dark:text-red-300': result.grade === 'Bad',
+              }"
+              >{{ result.grade }}</span
+            >
+          </p>
+          <p>
+            <strong>Boshlangan vaqt:</strong>
+            {{ result.startedAt | date: "medium" }}
+          </p>
+          <p>
+            <strong>Yakunlangan vaqt:</strong>
+            {{ result.finishedAt | date: "medium" }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Correct Answers -->
+      <div
+        *ngIf="result.correctQuestions.length > 0"
+        class="bg-green-500/20 dark:bg-green-900/20 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg"
+      >
+        <h3
+          class="text-sm font-semibold text-green-600 dark:text-green-400 mb-4"
+        >
+          To‘g‘ri javoblar
+        </h3>
+        <div *ngFor="let question of result.correctQuestions" class="mb-4">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
+            {{ question.text }}
+          </h4>
+          <img
+            *ngIf="question.imageUrl"
+            [src]="question.imageUrl"
+            class="w-full max-w-md h-32 object-cover rounded-lg mt-2 shadow-sm"
+            alt="Savol rasmi"
+          />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+            <div
+              *ngFor="let answer of question.answers"
+              class="flex items-center gap-2 text-sm"
+            >
+              <span
+                [ngClass]="
+                  answer.isCorrect
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-gray-700 dark:text-gray-300'
+                "
+                >{{ answer.text }}</span
+              >
+              <span
+                *ngIf="answer.isCorrect"
+                class="text-green-600 dark:text-green-400"
+                >(To‘g‘ri)</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wrong Answers -->
+      <div
+        *ngIf="result.wrongQuestions.length > 0"
+        class="bg-red-500/20 dark:bg-red-900/20 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg"
+      >
+        <h3 class="text-sm font-semibold text-red-600 dark:text-red-300 mb-4">
+          Noto‘g‘ri javoblar
+        </h3>
+        <div *ngFor="let question of result.wrongQuestions" class="mb-4">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
+            {{ question.text }}
+          </h4>
+          <img
+            *ngIf="question.imageUrl"
+            [src]="question.imageUrl"
+            class="w-full max-w-md h-32 object-cover rounded-lg mt-2 shadow-sm"
+            alt="Savol rasmi"
+          />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+            <div
+              *ngFor="let answer of question.answers"
+              class="flex items-center gap-2 text-sm"
+            >
+              <span
+                [ngClass]="
+                  answer.isCorrect
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-gray-700 dark:text-gray-300'
+                "
+                >{{ answer.text }}</span
+              >
+              <span
+                *ngIf="answer.isCorrect"
+                class="text-green-600 dark:text-green-400"
+                >(To‘g‘ri)</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unanswered Questions -->
+      <div
+        *ngIf="result.unansweredQuestions.length > 0"
+        class="bg-yellow-500/20 dark:bg-yellow-900/20 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg"
+      >
+        <h3
+          class="text-sm font-semibold text-yellow-600 dark:text-yellow-400 mb-4"
+        >
+          Javob berilmagan savollar
+        </h3>
+        <div *ngFor="let question of result.unansweredQuestions" class="mb-4">
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
+            {{ question.text }}
+          </h4>
+          <img
+            *ngIf="question.imageUrl"
+            [src]="question.imageUrl"
+            class="w-full max-w-md h-32 object-cover rounded-lg mt-2 shadow-sm"
+            alt="Savol rasmi"
+          />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+            <div
+              *ngFor="let answer of question.answers"
+              class="flex items-center gap-2 text-sm"
+            >
+              <span
+                [ngClass]="
+                  answer.isCorrect
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-gray-700 dark:text-gray-300'
+                "
+                >{{ answer.text }}</span
+              >
+              <span
+                *ngIf="answer.isCorrect"
+                class="text-green-600 dark:text-green-400"
+                >(To‘g‘ri)</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Restart Test -->
+      <div class="flex justify-center mt-8">
+        <button
+          (click)="startTest()"
+          class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-base font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-3 transform hover:-translate-y-1"
+        >
+          <i class="ri-restart-line text-lg"></i>
+          Testni qayta boshlash
+        </button>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div
+      *ngIf="selectedImage"
+      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in"
+      (click)="closeImage()"
+    >
+      <div
+        class="relative w-full max-w-4xl mx-4 sm:mx-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg p-4"
+        (click)="$event.stopPropagation()"
+      >
+        <img
+          [src]="selectedImage"
+          class="w-full h-auto rounded-lg"
+          alt="Kattalashtirilgan rasm"
+        />
+        <button
+          (click)="closeImage()"
+          class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center transition hover:bg-red-600 shadow-md"
+        >
+          <i class="ri-close-line text-lg"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-2px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(2px);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+</style>

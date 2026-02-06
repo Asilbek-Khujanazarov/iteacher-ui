@@ -1,0 +1,142 @@
+<div class="min-h-[70vh] flex flex-col md:flex-row gap-6 p-4">
+  <!-- Sidebar -->
+  <aside
+    class="w-full md:w-72 bg-white dark:bg-slate-800 rounded-2xl p-6 flex flex-col gap-2 shadow-lg"
+  >
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl bg-blue-100/60 dark:bg-blue-700/30 text-blue-600 dark:text-blue-400 font-semibold"
+      href="#"
+    >
+      <i class="ri-user-3-line text-xl"></i>
+      Ma'lumotlarim
+    </a>
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+      href="#"
+    >
+      <i class="ri-briefcase-line text-xl"></i>
+      Tajribalarim
+    </a>
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+      href="#"
+    >
+      <i class="ri-award-line text-xl"></i>
+      Sertifikatlarim
+    </a>
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+      href="#"
+    >
+      <i class="ri-time-line text-xl"></i>
+      To‘lovlar tarixi
+    </a>
+    <a
+      class="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+      href="#"
+    >
+      <i class="ri-computer-line text-xl"></i>
+      Qurilmalarim
+    </a>
+  </aside>
+
+  <!-- Main profile card -->
+  <main class="flex-1 flex flex-col gap-6">
+    <section
+      class="bg-white dark:bg-slate-800 rounded-2xl p-8 flex-col items-center shadow-lg"
+    >
+      <div class="relative mb-4 flex items-center gap-5">
+        <div
+          class="w-20 h-20 rounded-full bg-blue-100 dark:bg-slate-700 flex items-center justify-center text-3xl font-bold text-blue-600 dark:text-blue-200 overflow-hidden"
+        >
+          @if (user?.avatarUrl) {
+            <img
+              [src]="user?.avatarUrl"
+              alt="Avatar"
+              class="w-full h-full object-cover"
+            />
+          } @else {
+            {{ user?.firstName?.charAt(0) || ""
+            }}{{ user?.lastName?.charAt(0) || "" }}
+          }
+        </div>
+        <!-- Kichik va ishlaydigan avatar yuklash tugmasi -->
+        <label class="ml-2">
+          <span
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-2 py-1 rounded-lg transition flex items-center gap-2 text-sm cursor-pointer select-none"
+            title="Rasm yuklash"
+          >
+            <i class="ri-upload-cloud-2-line text-base"></i>
+            Rasm yuklash
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            class="hidden"
+            (change)="onAvatarChange($event)"
+          />
+        </label>
+        @if (avatarUploading) {
+          <div class="text-xs text-blue-500 ml-2">Yuklanmoqda...</div>
+        }
+      </div>
+      <div class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+        {{ user?.firstName }} {{ user?.lastName }}
+      </div>
+      <button
+        class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-2 rounded-lg transition mb-2"
+      >
+        Ma’lumotlarni o‘zgartirish
+      </button>
+
+      <div class="text-gray-500 dark:text-gray-400 text-sm">
+        Holat:
+        {{ user?.isVerified == true ? "Tasdiqlangan" : "Tasdiqlanmagan" }}
+      </div>
+      <div class="text-gray-500 dark:text-gray-400 text-sm">
+        Ro'yxatdan o'tgan vaqt: {{ user?.registeredDate | date: "longDate" }}
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-800 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-lg"
+    >
+      <div>
+        <div class="text-gray-500 dark:text-gray-400 mb-1">
+          Telefon raqamingiz
+        </div>
+        <div class="text-lg font-bold text-gray-900 dark:text-white">
+          {{ user?.phoneNumber! | phoneFormat }}
+        </div>
+      </div>
+      <div>
+        <div class="text-gray-500 dark:text-gray-400 mb-1">
+          Elektron manzilingiz
+        </div>
+        <div class="text-lg font-bold text-gray-900 dark:text-white opacity-60">
+          —
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-800 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-lg"
+    >
+      <div>
+        <div class="text-gray-900 dark:text-white font-semibold text-lg mb-1">
+          Parolni o‘zgartirish
+        </div>
+        <div class="text-gray-500 dark:text-gray-400 text-sm">
+          Bu yerda hisobingiz parolini o‘zgartirishingiz mumkin
+        </div>
+      </div>
+      <button
+        [routerLink]="'/forgot-password'"
+        class="border border-blue-400 text-blue-500 dark:text-blue-400 px-5 py-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition flex items-center gap-2"
+      >
+        Parolni o‘zgartirish
+        <i class="ri-external-link-line"></i>
+      </button>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,38 @@
+<div
+  class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors py-8"
+>
+  <div
+    class="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col items-center gap-4"
+  >
+    <div class="text-5xl">🛠️</div>
+    <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-white">
+      Sayt test jarayonida
+    </h2>
+    <p class="text-center text-slate-500 dark:text-slate-300">
+      Saytda tuzatish ishlari mavjud. Tez orada tayyor bo‘ladi.
+    </p>
+    <p class="text-center text-slate-500 dark:text-slate-300">
+      На сайте ведутся технические работы. Совсем скоро всё будет готово.
+    </p>
+
+    <form (ngSubmit)="subscribe()" class="w-full flex flex-col gap-3">
+      <input
+        [(ngModel)]="email"
+        name="email"
+        type="email"
+        placeholder="Emailingizni kiriting"
+        [ngModel]
+        required="email"
+        class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white px-3 py-2 focus:outline-none"
+        required
+      />
+
+      <button
+        type="submit"
+        class="w-full py-2 rounded-lg bg-violet-600 text-white font-semibold hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600 transition"
+      >
+        Xabarnoma olish
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,470 @@
+<div class="w-full md:flex-1">
+  <main class="w-full md:flex-1">
+    <h1
+      class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white text-center mb-6"
+    >
+      Savollar boshqaruvi
+    </h1>
+
+    <!-- Yuklanish holati -->
+    @if (loading) {
+      <div
+        class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 text-xs p-2 rounded-lg text-center w-full"
+      >
+        Yuklanmoqda...
+      </div>
+    }
+
+    <!-- Xatolik xabari -->
+    @if (error) {
+      <div
+        class="bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-300 text-xs p-2 rounded-lg text-center w-full"
+      >
+        {{ error }}
+      </div>
+    }
+
+    <!-- Savollar ro‘yxati -->
+    @if (!loading && questions.length > 0) {
+      <div class="flex flex-col gap-6">
+        @for (question of questions; track question) {
+          <div
+            class="bg-slate-50 dark:bg-slate-700 p-4 sm:p-6 rounded-lg shadow-sm w-full"
+          >
+            <div class="flex flex-col gap-4 items-center">
+              <!-- Savol matni va rasm -->
+              <div class="flex flex-col gap-3 items-center w-full">
+                @if (question.text) {
+                  <h2
+                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white text-center"
+                  >
+                    {{ question.text }}
+                  </h2>
+                }
+                @if (question.imageUrl) {
+                  <div class="relative w-full max-w-md">
+                    <img
+                      [src]="question.imageUrl"
+                      class="w-full h-32 sm:h-40 object-cover rounded-lg cursor-pointer border-2 border-white dark:border-slate-700"
+                      alt="Savol rasmi"
+                      (click)="openImage(question.imageUrl)"
+                      loading="lazy"
+                    />
+                    <button
+                      (click)="removeImage('question')"
+                      class="absolute -top-2 -right-2 bg-white dark:bg-slate-700 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full w-6 h-6 flex items-center justify-center transition"
+                    >
+                      <i class="ri-close-line text-sm"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+              <!-- Javoblar ikki ustunda (mobil uchun bir ustun) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                @for (
+                  answer of question.answers;
+                  track answer;
+                  let i = $index
+                ) {
+                  <div
+                    class="flex flex-col gap-2 text-sm text-gray-700 dark:text-gray-300 items-start"
+                  >
+                    <div class="flex items-center gap-2 w-full">
+                      <span class="font-semibold">{{ getLetter(i) }}.</span>
+                      @if (answer.text) {
+                        <span>{{ answer.text }}</span>
+                      }
+                      @if (answer.isCorrect) {
+                        <span class="text-green-500 font-medium"
+                          >(To‘g‘ri)</span
+                        >
+                      }
+                    </div>
+                    @if (answer.imageUrl) {
+                      <div
+                        class="relative w-full max-w-[150px] sm:max-w-[200px]"
+                      >
+                        <img
+                          [src]="answer.imageUrl"
+                          class="w-full h-20 sm:h-24 object-cover rounded-lg cursor-pointer border-2 border-white dark:border-slate-700"
+                          alt="Javob rasmi"
+                          (click)="openImage(answer.imageUrl)"
+                          loading="lazy"
+                        />
+                        <button
+                          (click)="removeImage('answer', i)"
+                          class="absolute -top-2 -right-2 bg-white dark:bg-slate-700 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full w-6 h-6 flex items-center justify-center transition"
+                        >
+                          <i class="ri-close-line text-sm"></i>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+              <!-- Tugmalar -->
+              <div class="flex gap-3 justify-center w-full">
+                <button
+                  (click)="editQuestion(question)"
+                  class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-sm"
+                >
+                  <i class="ri-edit-line text-sm"></i>
+                  Tahrirlash
+                </button>
+                <button
+                  (click)="openDeleteDialog(question.id)"
+                  class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-sm"
+                >
+                  <i class="ri-delete-bin-line text-sm"></i>
+                  O‘chirish
+                </button>
+              </div>
+              <!-- Tahrirlash formasi savol ostida -->
+              @if (editingQuestionId === question.id) {
+                <div
+                  class="mt-6 border-t border-gray-200 dark:border-slate-600 pt-4 w-full"
+                >
+                  <h2
+                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white text-center mb-4"
+                  >
+                    Savolni tahrirlash
+                  </h2>
+                  <form
+                    [formGroup]="questionForm"
+                    (ngSubmit)="onSubmit()"
+                    class="flex flex-col gap-4"
+                  >
+                    <!-- Savol matni -->
+                    <div class="w-full">
+                      <textarea
+                        formControlName="text"
+                        class="w-full p-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+                        rows="4"
+                        placeholder="Savolni kiriting (ixtiyoriy)"
+                      ></textarea>
+                      @if (
+                        questionForm.errors?.["textOrImage"] &&
+                        questionForm.touched
+                      ) {
+                        <div class="text-red-500 text-xs mt-1 text-center">
+                          Savolda matn yoki rasm bo‘lishi shart
+                        </div>
+                      }
+                    </div>
+                    <!-- Savol uchun rasm -->
+                    <div class="flex flex-col gap-3 items-center">
+                      <div class="flex flex-col sm:flex-row gap-3 items-center">
+                        <label
+                          class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 cursor-pointer select-none shadow-sm"
+                        >
+                          <i class="ri-upload-cloud-2-line text-sm"></i>
+                          Savol uchun rasm yuklash
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png"
+                            class="hidden"
+                            (change)="onImageChange($event, 'question')"
+                          />
+                        </label>
+                        @if (imageUploading) {
+                          <div class="text-xs text-blue-500">
+                            Yuklanmoqda...
+                          </div>
+                        }
+                        <div class="text-gray-500 dark:text-gray-400 text-xs">
+                          Maksimal hajmi: 5MB (JPEG yoki PNG)
+                        </div>
+                      </div>
+                      @if (questionImagePreview) {
+                        <div class="relative w-full max-w-md">
+                          <img
+                            (click)="openImage(questionImagePreview)"
+                            class="w-full h-32 sm:h-40 object-cover rounded-lg cursor-pointer border-2 border-white dark:border-slate-700"
+                            alt="Savol rasmi"
+                            [src]="questionImagePreview"
+                          />
+                          <button
+                            (click)="removeImage('question')"
+                            class="absolute -top-2 -right-2 bg-white dark:bg-slate-700 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full w-6 h-6 flex items-center justify-center transition"
+                          >
+                            <i class="ri-close-line text-sm"></i>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                    <!-- Javoblar -->
+                    <div formArrayName="answers" class="flex flex-col gap-3">
+                      <h2
+                        class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white text-center"
+                      >
+                        Javob variantlari
+                      </h2>
+                      @if (answers.invalid && answers.touched) {
+                        <div class="text-red-500 text-xs text-center">
+                          {{
+                            answers.errors?.["minAnswers"]
+                              ? "Kamida 2 ta javob bo‘lishi kerak"
+                              : ""
+                          }}
+                          {{
+                            answers.errors?.["oneCorrectAnswer"]
+                              ? "Kamida bitta to‘g‘ri javob tanlanishi kerak"
+                              : ""
+                          }}
+                        </div>
+                      }
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                        @for (
+                          answer of answers.controls;
+                          track answer;
+                          let i = $index
+                        ) {
+                          <div
+                            [formGroupName]="i"
+                            class="bg-slate-50 dark:bg-slate-700 p-3 rounded-lg"
+                          >
+                            <div class="flex items-center gap-3 mb-2">
+                              <span
+                                class="text-sm font-semibold text-gray-700 dark:text-gray-300"
+                                >{{ getLetter(i) }}</span
+                              >
+                              <input
+                                type="radio"
+                                formControlName="isCorrect"
+                                [value]="true"
+                                (change)="setCorrectAnswer(i)"
+                                class="w-4 h-4 text-blue-600"
+                              />
+                              <label
+                                class="text-gray-500 dark:text-gray-400 text-sm"
+                                >To‘g‘ri javob</label
+                              >
+                            </div>
+                            <div class="mb-2">
+                              <textarea
+                                formControlName="text"
+                                class="w-full p-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+                                rows="2"
+                                placeholder="Javob matnini kiriting (ixtiyoriy)"
+                              ></textarea>
+                              @if (
+                                answer.errors?.["textOrImage"] && answer.touched
+                              ) {
+                                <div
+                                  class="text-red-500 text-xs mt-1 text-center"
+                                >
+                                  Javobda matn yoki rasm bo‘lishi shart
+                                </div>
+                              }
+                            </div>
+                            <div class="flex flex-col gap-3 mb-2">
+                              <div
+                                class="flex flex-col sm:flex-row gap-3 items-center"
+                              >
+                                <label
+                                  class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded-lg transition flex items-center justify-center gap-2 cursor-pointer select-none shadow-sm"
+                                >
+                                  <i class="ri-upload-cloud-2-line text-sm"></i>
+                                  Javob uchun rasm
+                                  <input
+                                    type="file"
+                                    accept="image/jpeg,image/png"
+                                    class="hidden"
+                                    (change)="
+                                      onImageChange($event, 'answer', i)
+                                    "
+                                  />
+                                </label>
+                                <div
+                                  class="text-gray-500 dark:text-gray-400 text-xs"
+                                >
+                                  Maksimal hajmi: 5MB (JPEG yoki PNG)
+                                </div>
+                              </div>
+                              @if (answerImagePreviews[i]) {
+                                <div
+                                  class="relative w-full max-w-[150px] sm:max-w-[200px]"
+                                >
+                                  <img
+                                    (click)="openImage(answerImagePreviews[i])"
+                                    class="w-full h-20 sm:h-24 object-cover rounded-lg cursor-pointer border-2 border-white dark:border-slate-700"
+                                    alt="Javob rasmi"
+                                    [src]="answerImagePreviews[i]"
+                                  />
+                                  <button
+                                    (click)="removeImage('answer', i)"
+                                    class="absolute -top-2 -right-2 bg-white dark:bg-slate-700 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full w-6 h-6 flex items-center justify-center transition"
+                                  >
+                                    <i class="ri-close-line text-sm"></i>
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                            @if (answer.get("isCorrect")?.value) {
+                              <div>
+                                <label
+                                  class="text-gray-500 dark:text-gray-400 mb-1 block text-sm text-center"
+                                  >To‘g‘ri javob izohi (ixtiyoriy)</label
+                                >
+                                <textarea
+                                  formControlName="correctDescription"
+                                  class="w-full p-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+                                  rows="3"
+                                  placeholder="To‘g‘ri javobning izohini kiriting (ixtiyoriy)"
+                                ></textarea>
+                              </div>
+                            }
+                            @if (answers.length > 2) {
+                              <button
+                                type="button"
+                                (click)="removeAnswer(i)"
+                                class="text-red-500 hover:text-red-600 text-[0.65rem] mt-2 flex items-center justify-center gap-2 w-full"
+                              >
+                                <i class="ri-delete-bin-line text-sm"></i>
+                                Javobni o‘chirish
+                              </button>
+                            }
+                          </div>
+                        }
+                      </div>
+                      <button
+                        type="button"
+                        (click)="addAnswer()"
+                        class="w-full max-w-xs mx-auto bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 shadow-sm"
+                      >
+                        <i class="ri-add-line text-sm"></i>
+                        Javob qo‘shish
+                      </button>
+                    </div>
+                    <!-- Xatolik va yuklanish holati -->
+                    @if (error) {
+                      <div
+                        class="bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-300 text-xs p-2 rounded-lg text-center w-full"
+                      >
+                        {{ error }}
+                      </div>
+                    }
+                    @if (loading) {
+                      <div
+                        class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 text-xs p-2 rounded-lg text-center w-full"
+                      >
+                        Yuklanmoqda...
+                      </div>
+                    }
+                    <!-- Tugmalar -->
+                    <div class="flex flex-col gap-3 w-full max-w-xs mx-auto">
+                      <button
+                        type="submit"
+                        [disabled]="loading || questionForm.invalid"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition disabled:opacity-50 shadow-sm"
+                      >
+                        Saqlash
+                      </button>
+                      <button
+                        type="button"
+                        (click)="cancelEdit()"
+                        class="w-full bg-gray-500 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded-lg transition shadow-sm"
+                      >
+                        Bekor qilish
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (totalQuestions > 0) {
+      <div class="flex justify-center gap-3 mt-6">
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition disabled:opacity-50 shadow-sm"
+        >
+          Oldingi
+        </button>
+        <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center"
+          >{{ currentPage }} / {{ getTotalPages() }}</span
+        >
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === getTotalPages()"
+          class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition disabled:opacity-50 shadow-sm"
+        >
+          Keyingi
+        </button>
+      </div>
+    }
+
+    <!-- Savollar bo‘sh bo‘lsa -->
+    @if (!loading && questions.length === 0) {
+      <div class="text-gray-500 dark:text-gray-400 text-sm text-center mt-6">
+        Hech qanday savol topilmadi.
+      </div>
+    }
+
+    <!-- Delete tasdiqlash dialogi -->
+    @if (showDeleteDialog) {
+      <div
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white dark:bg-slate-800 rounded-lg p-6 w-full max-w-sm mx-4 shadow-lg"
+        >
+          <h3
+            class="text-lg font-semibold text-gray-900 dark:text-white text-center mb-4"
+          >
+            Savolni o‘chirish
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 text-center mb-6">
+            Haqiqatdan ham bu savolni o‘chirmoqchimisiz?
+          </p>
+          <div class="flex gap-3 justify-center">
+            <button
+              (click)="confirmDelete()"
+              class="w-full max-w-[120px] bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg transition shadow-sm"
+            >
+              Ha
+            </button>
+            <button
+              (click)="cancelDelete()"
+              class="w-full max-w-[120px] bg-gray-500 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded-lg transition shadow-sm"
+            >
+              Yo‘q
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Modal rasm ko‘rish uchun -->
+    @if (selectedImage) {
+      <div
+        class="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+        (click)="closeImage()"
+      >
+        <div
+          class="relative w-full max-w-4xl mx-4 sm:mx-6"
+          (click)="$event.stopPropagation()"
+        >
+          <img
+            [src]="selectedImage"
+            class="w-full h-auto rounded-lg"
+            alt="Kattalashtirilgan rasm"
+          />
+          <button
+            (click)="closeImage()"
+            class="absolute -top-2 -right-2 bg-white dark:bg-slate-700 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full w-6 h-6 flex items-center justify-center transition"
+          >
+            <i class="ri-close-line text-sm"></i>
+          </button>
+        </div>
+      </div>
+    }
+  </main>
+  <br />
+</div>
